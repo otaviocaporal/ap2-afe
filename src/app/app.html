@@ -1,0 +1,39 @@
+<app-navbar></app-navbar>
+
+<main class="container">
+  <div class="dashboard-layout">
+    
+    <!-- Sidebar column: Form -->
+    <div class="sidebar">
+      <app-livro-form
+        [selectedLivro]="selectedLivro"
+        (salvar)="salvarLivro($event)"
+        (cancelar)="cancelarEdicao()"
+      ></app-livro-form>
+    </div>
+
+    <!-- Main column: List -->
+    <div class="main-content">
+      <app-livro-list
+        [livros]="livros"
+        [carregando]="carregando"
+        (editar)="editarLivro($event)"
+        (excluir)="excluirLivro($event)"
+      ></app-livro-list>
+    </div>
+
+  </div>
+</main>
+
+<!-- Global Toast Notification -->
+@if (toastMessage) {
+  <div class="toast-container">
+    <div [class]="'toast ' + toastType">
+      <span class="toast-icon">
+        {{ toastType === 'success' ? '✨' : '❌' }}
+      </span>
+      <span class="toast-text">{{ toastMessage }}</span>
+      <button type="button" class="toast-close" (click)="toastMessage = null">&times;</button>
+    </div>
+  </div>
+}

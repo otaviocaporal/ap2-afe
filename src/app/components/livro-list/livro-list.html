@@ -1,0 +1,135 @@
+<!-- Stats Dashboard -->
+<div class="stats-grid">
+  <div class="stat-card glass">
+    <div class="stat-icon purple">📚</div>
+    <div class="stat-info">
+      <span class="stat-label">Total de Livros</span>
+      <span class="stat-value">{{ totalLivros }}</span>
+    </div>
+  </div>
+  <div class="stat-card glass">
+    <div class="stat-icon green">✅</div>
+    <div class="stat-info">
+      <span class="stat-label">Disponíveis</span>
+      <span class="stat-value">{{ totalDisponiveis }}</span>
+    </div>
+  </div>
+  <div class="stat-card glass">
+    <div class="stat-icon red">📖</div>
+    <div class="stat-info">
+      <span class="stat-label">Emprestados</span>
+      <span class="stat-value">{{ totalIndisponiveis }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- Filters Bar -->
+<div class="filters-card glass">
+  <div class="filter-group-search">
+    <span class="search-icon">🔍</span>
+    <input 
+      type="text" 
+      [(ngModel)]="busca" 
+      placeholder="Pesquisar por título ou autor..." 
+      class="filter-input"
+    />
+  </div>
+  
+  <div class="filter-selectors">
+    <select [(ngModel)]="categoriaFiltro" class="filter-select">
+      <option value="">Todas as Categorias</option>
+      <option value="Programação">Programação</option>
+      <option value="Fantasia">Fantasia</option>
+      <option value="Ficção Científica">Ficção Científica</option>
+      <option value="Distopia">Distopia</option>
+      <option value="Terror/Suspense">Terror/Suspense</option>
+      <option value="História">História</option>
+      <option value="Biografia">Biografia</option>
+      <option value="Outros">Outros</option>
+    </select>
+
+    <select [(ngModel)]="disponibilidadeFiltro" class="filter-select">
+      <option value="">Todos os Status</option>
+      <option value="sim">Disponível</option>
+      <option value="nao">Indisponível</option>
+    </select>
+  </div>
+</div>
+
+<!-- Main Table / Content List -->
+<div class="list-card glass">
+  <div class="list-header">
+    <h2>Livros Cadastrados</h2>
+    <span class="badge">{{ livrosFiltrados.length }} exibidos</span>
+  </div>
+
+  @if (carregando) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Carregando catálogo de livros...</p>
+    </div>
+  }
+
+  @if (!carregando && livrosFiltrados.length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <h3>Nenhum livro encontrado</h3>
+      <p>Tente ajustar seus filtros de pesquisa ou cadastrar um novo livro.</p>
+    </div>
+  }
+
+  @if (!carregando && livrosFiltrados.length > 0) {
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Categoria</th>
+            <th>Ano</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (livro of livrosFiltrados; track livro.id) {
+            <tr class="table-row">
+              <td class="cell-title">{{ livro.titulo }}</td>
+              <td class="cell-autor">{{ livro.autor }}</td>
+              <td><span class="tag-category">{{ livro.categoria }}</span></td>
+              <td>{{ livro.anoPublicacao }}</td>
+              <td>
+                <span [class]="livro.disponivel ? 'status-badge available' : 'status-badge unavailable'">
+                  {{ livro.disponivel ? 'Disponível' : 'Emprestado' }}
+                </span>
+              </td>
+              <td class="cell-actions">
+                <button type="button" class="btn-icon btn-edit" (click)="onEditar(livro)" title="Editar livro">
+                  ✏️ <span>Editar</span>
+                </button>
+                <button type="button" class="btn-icon btn-delete" (click)="confirmarExclusao(livro)" title="Excluir livro">
+                  🗑️ <span>Excluir</span>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
+
+<!-- Confirmation Modal -->
+@if (livroParaExcluir) {
+  <div class="modal-overlay">
+    <div class="modal-card glass popup-animation">
+      <div class="modal-icon">⚠️</div>
+      <h3>Confirmar Exclusão</h3>
+      <p>Deseja realmente excluir o livro <strong>"{{ livroParaExcluir.titulo }}"</strong> de <em>{{ livroParaExcluir.autor }}</em>?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancelarExclusao()">Cancelar</button>
+        <button type="button" class="btn btn-danger" (click)="executarExclusao()">Excluir</button>
+      </div>
+    </div>
+  </div>
+}

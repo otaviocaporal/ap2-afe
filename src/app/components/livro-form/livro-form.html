@@ -1,0 +1,128 @@
+<div class="form-card glass">
+  <div class="form-header">
+    <h3>{{ isEditMode ? 'Editar Livro' : 'Cadastrar Novo Livro' }}</h3>
+    <p class="form-subtitle">Preencha as informações do livro abaixo</p>
+  </div>
+
+  <form (ngSubmit)="onSubmit()" #formLivro="ngForm" class="book-form">
+    
+    <div class="form-group">
+      <label for="titulo">Título</label>
+      <input
+        id="titulo"
+        name="titulo"
+        type="text"
+        [(ngModel)]="livro.titulo"
+        required
+        minlength="3"
+        #titulo="ngModel"
+        placeholder="Ex: Clean Code"
+        [class.invalid]="titulo.invalid && (titulo.dirty || titulo.touched)"
+      />
+      @if (titulo.invalid && (titulo.dirty || titulo.touched)) {
+        <span class="error-msg">
+          @if (titulo.errors?.['required']) { O título é obrigatório. }
+          @if (titulo.errors?.['minlength']) { Deve ter pelo menos 3 caracteres. }
+        </span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="autor">Autor</label>
+      <input
+        id="autor"
+        name="autor"
+        type="text"
+        [(ngModel)]="livro.autor"
+        required
+        minlength="3"
+        #autor="ngModel"
+        placeholder="Ex: Robert C. Martin"
+        [class.invalid]="autor.invalid && (autor.dirty || autor.touched)"
+      />
+      @if (autor.invalid && (autor.dirty || autor.touched)) {
+        <span class="error-msg">
+          @if (autor.errors?.['required']) { O autor é obrigatório. }
+          @if (autor.errors?.['minlength']) { Deve ter pelo menos 3 caracteres. }
+        </span>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="categoria">Categoria</label>
+      <select
+        id="categoria"
+        name="categoria"
+        [(ngModel)]="livro.categoria"
+        required
+        #categoria="ngModel"
+        [class.invalid]="categoria.invalid && (categoria.dirty || categoria.touched)"
+      >
+        <option value="" disabled selected>Selecione uma categoria...</option>
+        <option value="Programação">Programação</option>
+        <option value="Fantasia">Fantasia</option>
+        <option value="Ficção Científica">Ficção Científica</option>
+        <option value="Distopia">Distopia</option>
+        <option value="Terror/Suspense">Terror/Suspense</option>
+        <option value="História">História</option>
+        <option value="Biografia">Biografia</option>
+        <option value="Outros">Outros</option>
+      </select>
+      @if (categoria.invalid && (categoria.dirty || categoria.touched)) {
+        <span class="error-msg">A categoria é obrigatória.</span>
+      }
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col">
+        <label for="anoPublicacao">Ano de Publicação</label>
+        <input
+          id="anoPublicacao"
+          name="anoPublicacao"
+          type="number"
+          [(ngModel)]="livro.anoPublicacao"
+          required
+          min="1000"
+          max="2026"
+          #anoPublicacao="ngModel"
+          placeholder="Ex: 2008"
+          [class.invalid]="anoPublicacao.invalid && (anoPublicacao.dirty || anoPublicacao.touched)"
+        />
+        @if (anoPublicacao.invalid && (anoPublicacao.dirty || anoPublicacao.touched)) {
+          <span class="error-msg">
+            @if (anoPublicacao.errors?.['required']) { O ano é obrigatório. }
+            @if (anoPublicacao.errors?.['min'] || anoPublicacao.errors?.['max']) { Ano inválido (1000 - 2026). }
+          </span>
+        }
+      </div>
+
+      <div class="form-group col-checkbox">
+        <label class="checkbox-container">
+          <input
+            name="disponivel"
+            type="checkbox"
+            [(ngModel)]="livro.disponivel"
+          />
+          <span class="checkmark"></span>
+          Disponível
+        </label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      @if (isEditMode) {
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="formLivro.invalid">
+          Salvar Alterações
+        </button>
+      } @else {
+        <button type="submit" class="btn btn-primary btn-full" [disabled]="formLivro.invalid">
+          Cadastrar Livro
+        </button>
+      }
+    </div>
+
+  </form>
+</div>
