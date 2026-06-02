@@ -56,7 +56,13 @@ npm run api
 npm start
 ```
 
-6. Acesse no navegador:
+6. Caso queira executar ambos:
+
+```bash
+npm run start:all 
+```
+
+7. Acesse no navegador:
 
 ```txt
 http://localhost:4200

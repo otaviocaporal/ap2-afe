@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Livro } from '../../models/livro';
 
 @Component({
@@ -9,6 +9,8 @@ import { Livro } from '../../models/livro';
   styleUrl: './livro-form.css',
 })
 export class LivroForm {
+  @ViewChild('formLivro') formDirective?: NgForm;
+
   @Input() set selectedLivro(val: Livro | null) {
     if (val) {
       this.livro = { ...val };
@@ -37,6 +39,9 @@ export class LivroForm {
 
   resetForm() {
     this.livro = this.initLivro();
+    if (this.formDirective) {
+      this.formDirective.resetForm(this.livro);
+    }
   }
 
   onSubmit() {

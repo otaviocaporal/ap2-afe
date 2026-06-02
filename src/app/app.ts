@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Navbar } from './components/navbar/navbar';
 import { LivroForm } from './components/livro-form/livro-form';
 import { LivroList } from './components/livro-list/livro-list';
@@ -13,6 +13,7 @@ import { Livro } from './models/livro';
 })
 export class App implements OnInit {
   private readonly livroService = inject(LivroService);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   livros: Livro[] = [];
   carregando = false;
@@ -32,11 +33,13 @@ export class App implements OnInit {
       next: (dados) => {
         this.livros = dados;
         this.carregando = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Erro ao carregar livros', err);
         this.showToast('Erro ao carregar livros. Verifique se a API está rodando.', 'error');
         this.carregando = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -48,10 +51,12 @@ export class App implements OnInit {
           this.livros = this.livros.map(l => l.id === atualizado.id ? atualizado : l);
           this.selectedLivro = null;
           this.showToast(`Livro "${atualizado.titulo}" atualizado com sucesso!`, 'success');
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Erro ao atualizar livro', err);
           this.showToast('Erro ao atualizar livro.', 'error');
+          this.cdr.detectChanges();
         }
       });
     } else {
@@ -59,10 +64,12 @@ export class App implements OnInit {
         next: (criado) => {
           this.livros = [...this.livros, criado];
           this.showToast(`Livro "${criado.titulo}" cadastrado com sucesso!`, 'success');
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Erro ao cadastrar livro', err);
           this.showToast('Erro ao cadastrar livro.', 'error');
+          this.cdr.detectChanges();
         }
       });
     }
@@ -85,10 +92,12 @@ export class App implements OnInit {
         if (this.selectedLivro?.id === id) {
           this.selectedLivro = null;
         }
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Erro ao excluir livro', err);
         this.showToast('Erro ao excluir livro.', 'error');
+        this.cdr.detectChanges();
       }
     });
   }
@@ -99,8 +108,10 @@ export class App implements OnInit {
     }
     this.toastMessage = message;
     this.toastType = type;
+    this.cdr.detectChanges();
     this.toastTimeout = setTimeout(() => {
       this.toastMessage = null;
+      this.cdr.detectChanges();
     }, 4000);
   }
 }
