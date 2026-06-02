@@ -29,7 +29,7 @@ Aplicação desenvolvida em Angular para cadastro, listagem, edição e exclusã
 1. Clone o repositório:
 
 ```bash
-git clone https://github.com/otaviocaporal/
+git clone https://github.com/otaviocaporal/ap2-afe.git
 ```
 
 2. Acesse a pasta do projeto:
